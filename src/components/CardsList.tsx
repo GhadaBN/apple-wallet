@@ -1,6 +1,14 @@
-import { View, Image } from "react-native";
+import { View, Image, useWindowDimensions } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import Animated, { useSharedValue } from "react-native-reanimated";
+import Animated, {
+  cancelAnimation,
+  useSharedValue,
+  withDecay,
+  clamp,
+  withClamp,
+} from "react-native-reanimated";
+import Card from "./card";
+import { useState } from "react";
 const cards = [
   require("../../assets/cards/Card_1.png"),
   require("../../assets/cards/Card_2.png"),
@@ -14,39 +22,41 @@ const cards = [
 ];
 
 const CardsList = () => {
+  const [listHeight, setListHeight] = useState(0);
+  const { height: screenHeight } = useWindowDimensions();
+
   const scrollY = useSharedValue(0);
+  const maxScrollY = listHeight - screenHeight + 200;
+
   const pan = Gesture.Pan()
+
+    .onBegin(() => {
+      cancelAnimation(scrollY);
+    })
     .onStart(() => {
       console.log("panning start");
     })
-    .onChange((event) => {
-      console.log("panning.scrolled on Y: ", event.changeY);
 
-      scrollY.value = scrollY.value - event.changeY;
+    .onChange((event) => {
+      scrollY.value = clamp(scrollY.value - event.changeY, 0, maxScrollY);
+
+      console.log("Scroll ", scrollY.value);
     })
-    .onEnd(() => {
-      console.log("panning ended");
+    .onEnd((event) => {
+      scrollY.value = withClamp(
+        { min: 0, max: maxScrollY },
+        withDecay({ velocity: -event.velocityY })
+      );
     });
 
   return (
     <GestureDetector gesture={pan}>
-      <View style={{ padding: 10 }}>
+      <View
+        style={{ padding: 10 }}
+        onLayout={(event) => setListHeight(event.nativeEvent.layout.height)}
+      >
         {cards.map((card, index) => (
-          <Animated.Image
-            key={index}
-            source={card}
-            style={{
-              width: "100%",
-              height: undefined,
-              aspectRatio: 7 / 4,
-              marginVertical: 5,
-              transform: [
-                {
-                  translateY: scrollY,
-                },
-              ],
-            }}
-          />
+          <Card key={index} card={card} index={index} scrollY={scrollY} />
         ))}
       </View>
     </GestureDetector>
