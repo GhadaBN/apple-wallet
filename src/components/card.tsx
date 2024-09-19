@@ -17,7 +17,7 @@ const Card = ({ card, index, scrollY, activeCardIndex }) => {
     () => scrollY.value,
 
     (current) => {
-      translateY.value = clamp(-current, -index * cardHeight * 0.9, 0);
+      translateY.value = clamp(-current, -index * cardHeight * 0.95, 0);
     }
   );
 
@@ -29,14 +29,15 @@ const Card = ({ card, index, scrollY, activeCardIndex }) => {
       }
 
       console.log("active card changed from", previous, "to", current);
+
       // No card selected, move to list view
 
       // This card becomes active
 
       //Another card is active, move to the bottom
-      // translateY.value = withTiming(
-      //   -index * cardHeight * 0.9 + screenHeight * 0.5
-      // );
+      translateY.value = withTiming(
+        -index * cardHeight * 0.95 + screenHeight * 0.5
+      );
     }
   );
 
