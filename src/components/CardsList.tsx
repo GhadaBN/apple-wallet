@@ -17,16 +17,16 @@ const cards = [
   require("../../assets/cards/Card_5.png"),
   require("../../assets/cards/Card_6.png"),
   require("../../assets/cards/Card_7.png"),
-  require("../../assets/cards/Card_8.png"),
-  require("../../assets/cards/Card_9.png"),
 ];
 
 const CardsList = () => {
   const [listHeight, setListHeight] = useState(0);
   const { height: screenHeight } = useWindowDimensions();
 
+  const activeCardIndex = useSharedValue(null);
+
   const scrollY = useSharedValue(0);
-  const maxScrollY = listHeight - screenHeight + 200;
+  const maxScrollY = listHeight - screenHeight + 600;
 
   const pan = Gesture.Pan()
 
@@ -56,7 +56,13 @@ const CardsList = () => {
         onLayout={(event) => setListHeight(event.nativeEvent.layout.height)}
       >
         {cards.map((card, index) => (
-          <Card key={index} card={card} index={index} scrollY={scrollY} />
+          <Card
+            key={index}
+            card={card}
+            index={index}
+            scrollY={scrollY}
+            activeCardIndex={activeCardIndex}
+          />
         ))}
       </View>
     </GestureDetector>
