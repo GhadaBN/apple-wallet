@@ -31,13 +31,19 @@ const Card = ({ card, index, scrollY, activeCardIndex }) => {
       console.log("active card changed from", previous, "to", current);
 
       // No card selected, move to list view
-
-      // This card becomes active
-
-      //Another card is active, move to the bottom
-      translateY.value = withTiming(
-        -index * cardHeight * 0.95 + screenHeight * 0.5
-      );
+      if (activeCardIndex.value === null) {
+        translateY.value = withTiming(
+          clamp(-scrollY.value, -index * cardHeight * 0.95, 0)
+        );
+      } else if (activeCardIndex.value === index) {
+        // This card becomes active
+        translateY.value = withTiming(-index * cardHeight * 0.95);
+      } else {
+        // Another card is active, move to the bottom
+        translateY.value = withTiming(
+          -index * cardHeight * 0.95 + screenHeight * 0.5
+        );
+      }
     }
   );
 
