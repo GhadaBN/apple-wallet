@@ -1,12 +1,13 @@
 import { useState } from "react";
 import Animated, {
   clamp,
+  Easing,
   useAnimatedReaction,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import { useWindowDimensions } from "react-native";
+import { useWindowDimensions, View } from "react-native";
 
 const Card = ({ card, index, scrollY, activeCardIndex }) => {
   const [cardHeight, setCardHeight] = useState(0);
@@ -37,11 +38,18 @@ const Card = ({ card, index, scrollY, activeCardIndex }) => {
         );
       } else if (activeCardIndex.value === index) {
         // This card becomes active
-        translateY.value = withTiming(-index * cardHeight * 0.95);
+        translateY.value = withTiming(-index * cardHeight * 0.95, {
+          duration: 500,
+          easing: Easing.out(Easing.quad),
+        });
       } else {
         // Another card is active, move to the bottom
         translateY.value = withTiming(
-          -index * cardHeight * 0.95 + screenHeight * 0.5
+          -index * cardHeight * 0.95 + screenHeight * 0.5,
+          {
+            duration: 500,
+            easing: Easing.out(Easing.quad),
+          }
         );
       }
     }
@@ -57,23 +65,36 @@ const Card = ({ card, index, scrollY, activeCardIndex }) => {
 
   return (
     <GestureDetector gesture={tap}>
-      <Animated.Image
-        source={card}
-        onLayout={(event) =>
-          setCardHeight(event.nativeEvent.layout.height + 10)
-        }
+      <View
         style={{
-          width: "100%",
-          height: undefined,
-          aspectRatio: 7 / 4,
-          marginVertical: 5,
-          transform: [
-            {
-              translateY: translateY,
-            },
-          ],
+          shadowColor: "#000000",
+          shadowOffset: {
+            width: 0,
+            height: 3,
+          },
+          shadowOpacity: 0.1,
+          shadowRadius: 3.05,
+          elevation: 4,
         }}
-      />
+      >
+        <Animated.Image
+          source={card}
+          onLayout={(event) =>
+            setCardHeight(event.nativeEvent.layout.height + 10)
+          }
+          style={{
+            width: "100%",
+            height: undefined,
+            aspectRatio: 7 / 4,
+            marginVertical: 5,
+            transform: [
+              {
+                translateY: translateY,
+              },
+            ],
+          }}
+        />
+      </View>
     </GestureDetector>
   );
 };

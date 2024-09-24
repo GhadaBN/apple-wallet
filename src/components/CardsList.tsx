@@ -16,7 +16,6 @@ const cards = [
   require("../../assets/cards/Card_4.png"),
   require("../../assets/cards/Card_5.png"),
   require("../../assets/cards/Card_6.png"),
-  require("../../assets/cards/Card_7.png"),
 ];
 
 const CardsList = () => {
