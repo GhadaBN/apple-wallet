@@ -6,10 +6,10 @@ const Header = () => {
     <View style={styles.headerContainer}>
       <Text style={styles.title}>Wallet</Text>
       <View style={styles.iconsContainer}>
-        <Icon name="cube-outline" size={25} color="black" />
+        <Icon name="cube-outline" size={31} color="black" />
         <Icon
           name="add-circle-outline"
-          size={28}
+          size={34}
           color="black"
           style={styles.icon}
         />
@@ -23,18 +23,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingLeft: 16,
-    paddingBottom: 10,
-    paddingTop: 20,
+    paddingBottom: 25,
+    paddingTop: 35,
     backgroundColor: "#fff",
   },
   title: {
-    fontSize: 30,
+    fontSize: 32,
     fontWeight: "bold",
   },
   iconsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: 80,
+    width: 90,
   },
   icon: {
     marginRight: 16,
